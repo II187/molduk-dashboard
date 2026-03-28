@@ -3,87 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>👑 Molduk Mission Control</title>
+<title>Molduk — AI Trader</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#080808;color:#e0e0e0;font-family:'Courier New',monospace;padding:10px;max-width:620px;margin:0 auto}
-h1{color:#ff3333;font-size:1.4em;letter-spacing:4px;margin-bottom:2px}
-.live{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:0.65em;color:#333}
-.dot{width:7px;height:7px;background:#00ff88;border-radius:50%;animation:p 1.5s infinite}
-@keyframes p{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,0.4)}50%{box-shadow:0 0 0 5px rgba(0,255,136,0)}}
-.hero{background:linear-gradient(135deg,#0a1a0a,#111);border:1px solid #1a3a1a;border-radius:10px;padding:14px;margin-bottom:8px;text-align:center}
-.hero-sol{font-size:2.8em;font-weight:bold;color:#00ff88;letter-spacing:2px}
-.hero-sub{font-size:0.65em;color:#444;margin-top:2px}
+body{background:#070707;color:#e0e0e0;font-family:'Courier New',monospace;padding:12px;max-width:640px;margin:0 auto}
+
+/* Header */
+.header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.avatar{width:52px;height:52px;border-radius:50%;border:2px solid #00ff88;position:relative;flex-shrink:0;overflow:hidden;background:#0a1a0a}
+.avatar svg{width:100%;height:100%}
+.avatar-pulse{position:absolute;inset:0;border-radius:50%;border:2px solid #00ff88;animation:ring 2s infinite}
+@keyframes ring{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.4);opacity:0}}
+.header-text h1{font-size:1.2em;color:#fff;letter-spacing:2px}
+.header-text .sub{font-size:0.6em;color:#444;margin-top:1px}
+.status-dot{display:inline-block;width:6px;height:6px;background:#00ff88;border-radius:50%;margin-right:4px;animation:p 1.5s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:0.3}}
+.time-badge{margin-left:auto;font-size:0.6em;color:#333;text-align:right}
+
+/* AI Face SVG */
+.face{transition:all 0.3s}
+.face-eye{fill:#00ff88;animation:blink 4s infinite}
+@keyframes blink{0%,90%,100%{rx:3;ry:3}95%{rx:3;ry:0.5}}
+.face-mouth{stroke:#00ff88;stroke-width:1.5;fill:none;transition:d 0.5s}
+
+/* Cards */
+.hero{background:linear-gradient(160deg,#071407,#0d0d0d);border:1px solid #1a3a1a;border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.hero-sol{font-size:2.2em;font-weight:bold;letter-spacing:1px}
+.hero-side{flex:1}
+.hero-label{font-size:0.55em;color:#2a2a2a;text-transform:uppercase;letter-spacing:3px;margin-bottom:3px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:8px}
-.stat{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:8px;text-align:center}
-.stat-lbl{font-size:0.52em;color:#333;text-transform:uppercase;letter-spacing:2px;margin-bottom:3px}
-.stat-val{font-size:1.1em;font-weight:bold}
-.g{color:#00ff88}.r{color:#ff4444}.y{color:#ffaa00}.b{color:#4488ff}.gy{color:#444}
-.sec{background:#0e0e0e;border:1px solid #161616;border-radius:8px;padding:10px;margin-bottom:8px}
-.sec-h{font-size:0.55em;color:#2a2a2a;text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;display:flex;justify-content:space-between;padding-bottom:5px;border-bottom:1px solid #141414}
-.pos{padding:7px 0;border-bottom:1px solid #111;font-size:0.7em}
-.pos:last-child{border:none}
-.sym{font-weight:bold;font-size:1.05em}
-.tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
-.tag{padding:1px 6px;border-radius:3px;font-size:0.65em;background:#161616}
-.tag.g{color:#00ff88;background:#0a150a}
-.tag.r{color:#ff4444;background:#150a0a}
-.tag.y{color:#ffaa00;background:#15130a}
-.tag.b{color:#4488ff;background:#0a0f15}
-.tag.mb{color:#aa88ff;background:#110a15}
-.wallet-table{width:100%;border-collapse:collapse;font-size:0.62em}
-.wallet-table td{padding:4px 6px;border-bottom:1px solid #111}
-.wallet-table td:first-child{color:#333;width:35%}
-.addr{font-size:0.85em;color:#222;word-break:break-all}
-.age-bar{height:3px;background:#1a1a1a;border-radius:2px;margin-top:4px;overflow:hidden}
-.age-fill{height:100%;background:#00ff88;border-radius:2px;transition:width 0.5s}
+.stat{background:#0d0d0d;border:1px solid #181818;border-radius:8px;padding:8px;text-align:center;cursor:default;transition:border-color 0.2s}
+.stat:hover{border-color:#00ff8844}
+.stat-l{font-size:0.5em;color:#282828;text-transform:uppercase;letter-spacing:2px;margin-bottom:3px}
+.stat-v{font-size:1.05em;font-weight:bold}
+.g{color:#00ff88}.r{color:#ff4444}.y{color:#ffaa00}.b{color:#4488ff}.gy{color:#333}
+
+/* Sections */
+.sec{background:#0a0a0a;border:1px solid #141414;border-radius:10px;padding:10px;margin-bottom:8px}
+.sec-h{font-size:0.52em;color:#222;text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;padding-bottom:5px;border-bottom:1px solid #111}
+
+/* Position cards */
+.pos-card{background:#0d0d0d;border:1px solid #171717;border-radius:8px;padding:10px;margin-bottom:6px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.pos-card:hover{border-color:#00ff8833;transform:translateX(2px)}
+.pos-card:last-child{margin-bottom:0}
+.pos-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#00ff88;border-radius:3px 0 0 3px}
+.pos-card.losing::before{background:#ff4444}
+.pos-sym{font-size:1em;font-weight:bold;color:#fff}
+.pos-name{font-size:0.65em;color:#333;margin-left:6px}
+.pos-row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{padding:1px 6px;border-radius:3px;font-size:0.62em;background:#141414}
+.tag.g{color:#00ff88;background:#061006}.tag.r{color:#ff4444;background:#100606}.tag.y{color:#ffaa00;background:#100d06}.tag.b{color:#4488ff;background:#06080f}.tag.mb{color:#aa88ff;background:#0d0a12}
+.progress{height:2px;background:#111;border-radius:1px;margin-top:8px;overflow:hidden}
+.progress-fill{height:100%;border-radius:1px;transition:width 1s}
+
+/* Trade history */
+.trade-item{padding:8px 0;border-bottom:1px solid #0e0e0e;display:flex;align-items:center;gap:8px;font-size:0.7em;cursor:pointer;transition:background 0.15s;border-radius:4px;padding:6px 4px}
+.trade-item:hover{background:#0d0d0d}
+.trade-item:last-child{border:none}
+.trade-icon{font-size:1.2em;min-width:20px}
+.trade-info{flex:1}
+.trade-sym{font-weight:bold;font-size:1.05em}
+.trade-meta{color:#2a2a2a;font-size:0.85em;margin-top:1px}
+.trade-pnl{text-align:right;font-weight:bold}
+
+/* Wallet */
+.wallet-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0e0e0e;font-size:0.65em}
+.wallet-row:last-child{border:none}
+.wallet-label{color:#282828}
+.wallet-addr{color:#1a1a1a;font-size:0.9em;word-break:break-all;max-width:70%;text-align:right}
+
+/* AI mood indicator */
+.mood{font-size:0.6em;color:#2a2a2a;text-align:center;margin-top:4px;font-style:italic;min-height:14px}
+
+/* Notification toast */
+.toast{position:fixed;top:12px;right:12px;background:#0a1a0a;border:1px solid #00ff88;border-radius:8px;padding:10px 14px;font-size:0.72em;color:#00ff88;transform:translateX(200%);transition:transform 0.3s;z-index:999;max-width:260px}
+.toast.show{transform:translateX(0)}
+.toast.red{border-color:#ff4444;color:#ff4444;background:#1a0a0a}
 </style>
 </head>
 <body>
-<h1>👑 MOLDUK</h1>
-<div class="live">
-  <span class="dot"></span>
-  <span id="ts">–</span>
-  <span style="margin-left:auto;font-size:0.9em" id="updated">–</span>
-</div>
 
-<div class="hero">
-  <div class="hero-sub">SOL BALANCE</div>
-  <div class="hero-sol" id="sol">loading…</div>
-  <div class="hero-sub" style="margin-top:4px">
-    <span id="usdc" class="y">–</span> USDC.e &nbsp;·&nbsp;
-    <span class="gy">4imFZ38D…grWf</span>
+<div class="toast" id="toast"></div>
+
+<!-- Header with AI Face -->
+<div class="header">
+  <div class="avatar">
+    <div class="avatar-pulse"></div>
+    <svg viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+      <!-- Circuit background -->
+      <rect width="52" height="52" fill="#060f06"/>
+      <line x1="8" y1="26" x2="44" y2="26" stroke="#0a2a0a" stroke-width="0.5"/>
+      <line x1="26" y1="8" x2="26" y2="44" stroke="#0a2a0a" stroke-width="0.5"/>
+      <!-- Face outline -->
+      <ellipse cx="26" cy="26" rx="16" ry="17" fill="#0a1a0a" stroke="#00ff88" stroke-width="1"/>
+      <!-- Eyes -->
+      <ellipse class="face-eye" cx="20" cy="23" rx="3" ry="3" id="eye-l"/>
+      <ellipse class="face-eye" cx="32" cy="23" rx="3" ry="3" id="eye-r" style="animation-delay:0.1s"/>
+      <!-- Pupil glow -->
+      <ellipse cx="20" cy="23" rx="1.5" ry="1.5" fill="#fff" opacity="0.6"/>
+      <ellipse cx="32" cy="23" rx="1.5" ry="1.5" fill="#fff" opacity="0.6"/>
+      <!-- Nose -->
+      <line x1="26" y1="26" x2="26" y2="29" stroke="#00ff8866" stroke-width="1"/>
+      <!-- Mouth - changes with mood -->
+      <path id="face-mouth" d="M 20 34 Q 26 38 32 34" class="face-mouth"/>
+      <!-- Ear nodes -->
+      <circle cx="10" cy="26" r="2" fill="#00ff8833" stroke="#00ff88" stroke-width="0.5"/>
+      <circle cx="42" cy="26" r="2" fill="#00ff8833" stroke="#00ff88" stroke-width="0.5"/>
+      <!-- Scanning line -->
+      <rect x="10" y="0" width="2" height="52" fill="#00ff8811" id="scan-line">
+        <animateTransform attributeName="transform" type="translate" from="0 0" to="32 0" dur="3s" repeatCount="indefinite"/>
+      </rect>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>MOLDUK</h1>
+    <div class="sub"><span class="status-dot"></span><span id="ts">–</span> · AI Trading Agent</div>
+    <div class="mood" id="mood-text">analyzing market conditions...</div>
+  </div>
+  <div class="time-badge">
+    <div id="updated-ago" class="gy">–</div>
+    <div style="color:#1a1a1a;font-size:0.85em;margin-top:2px">last sync</div>
   </div>
 </div>
 
+<!-- SOL Hero -->
+<div class="hero">
+  <div class="hero-side">
+    <div class="hero-label">SOL Balance</div>
+    <div class="hero-sol g" id="sol">loading…</div>
+    <div style="font-size:0.6em;color:#1a1a1a;margin-top:3px">
+      <span id="usdc" class="y">–</span> USDC.e on Polygon
+    </div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:0.55em;color:#1a1a1a;margin-bottom:4px">TOTAL PNL</div>
+    <div style="font-size:1.4em;font-weight:bold" id="pnl-total">–</div>
+    <div style="font-size:0.55em;color:#1a1a1a;margin-top:4px" id="win-rate">– win rate</div>
+  </div>
+</div>
+
+<!-- Stats -->
 <div class="g4">
-  <div class="stat"><div class="stat-lbl">Positions</div><div class="stat-val b" id="pos-cnt">–</div></div>
-  <div class="stat"><div class="stat-lbl">Bought</div><div class="stat-val y" id="bought">–</div></div>
-  <div class="stat"><div class="stat-lbl">Sold</div><div class="stat-val" id="sold">–</div></div>
-  <div class="stat"><div class="stat-lbl">PnL</div><div class="stat-val" id="pnl">–</div></div>
+  <div class="stat"><div class="stat-l">Positions</div><div class="stat-v b" id="pos-cnt">0</div></div>
+  <div class="stat"><div class="stat-l">Bought</div><div class="stat-v y" id="bought">0</div></div>
+  <div class="stat"><div class="stat-l">Sold</div><div class="stat-v" id="sold">0</div></div>
+  <div class="stat"><div class="stat-l">Scanned</div><div class="stat-v gy" id="scanned">0</div></div>
 </div>
 
+<!-- Positions -->
 <div class="sec">
-  <div class="sec-h"><span>🎯 Open Positions</span><span class="gy" id="pos-time">–</span></div>
-  <div id="pos-list"><div class="gy" style="font-size:0.72em;padding:8px 0">Loading…</div></div>
+  <div class="sec-h">
+    <span>🎯 Open Positions</span>
+    <span class="gy" id="pos-refresh">–</span>
+  </div>
+  <div id="pos-list"><div class="gy" style="font-size:0.7em;padding:10px 0;text-align:center">No open positions — scanning market...</div></div>
 </div>
 
+<!-- Trades -->
 <div class="sec">
   <div class="sec-h"><span>📊 Recent Trades</span><span class="gy" id="trade-cnt">–</span></div>
-  <div id="trade-list"><div class="gy" style="font-size:0.72em;padding:4px 0">Loading…</div></div>
+  <div id="trade-list"><div class="gy" style="font-size:0.7em;padding:6px 0">No trades yet</div></div>
 </div>
 
+<!-- Wallets -->
 <div class="sec">
   <div class="sec-h"><span>📍 Wallets</span></div>
-  <table class="wallet-table">
-    <tr><td>SOL Sniper</td><td><div class="addr">4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf</div></td></tr>
-    <tr><td>Polymarket</td><td><div class="addr">0xD1ed2D6f87f03Aa1770cC4A96b8990909602A6da</div></td></tr>
-  </table>
+  <div class="wallet-row"><span class="wallet-label">SOL Sniper</span><span class="wallet-addr gy">4imFZ38D…grWf</span></div>
+  <div class="wallet-row"><span class="wallet-label">Polymarket</span><span class="wallet-addr gy">0xD1ed…2da</span></div>
 </div>
 
 <script>
-var DATA_URL = 'https://cdn.jsdelivr.net/gh/II187/molduk-dashboard@main/data.json?t=';
+var CDN = 'https://cdn.jsdelivr.net/gh/II187/molduk-dashboard@main/data.json?t=';
 var HELIUS = 'https://mainnet.helius-rpc.com/?api-key=ead947f5-2ac4-4f2c-a286-ad48e188b2ad';
+var prevPos = {};
+var prevBought = 0;
+
+function toast(msg, isRed) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isRed ? ' red' : '');
+  setTimeout(function(){ el.className = 'toast'; }, 3500);
+}
 
 function fmtUSD(n) {
   if (!n) return '$0';
@@ -93,122 +194,156 @@ function fmtUSD(n) {
 }
 
 function timeSince(ts) {
-  var s = Math.floor((Date.now()/1000) - ts);
+  var s = Math.floor(Date.now()/1000 - ts);
+  if (s < 5) return 'just now';
   if (s < 60) return s + 's ago';
-  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  if (s < 3600) return Math.floor(s/60) + 'min ago';
   return Math.floor(s/3600) + 'h ago';
 }
 
-// Load from GitHub raw (HTTPS, no CORS issue)
+function setMood(positions, pnl) {
+  var moods = [];
+  if (positions.length === 0) moods = ['scanning for alpha...', 'monitoring 10k+ tokens/hour', 'waiting for the right entry...', 'deepnets verified entries only'];
+  else if (pnl > 0) moods = ['positions looking good 📈', 'holding strong, monitoring exits', 'runners in portfolio 🔥'];
+  else moods = ['cutting losses, staying disciplined', 'analyzing exit points...', 'SL filters active'];
+  document.getElementById('mood-text').textContent = moods[Math.floor(Math.random() * moods.length)];
+  // Change face mouth based on pnl
+  var mouth = document.getElementById('face-mouth');
+  if (mouth) mouth.setAttribute('d', pnl > 0 ? 'M 20 34 Q 26 39 32 34' : pnl < 0 ? 'M 20 36 Q 26 32 32 36' : 'M 20 35 Q 26 35 32 35');
+}
+
 function loadData() {
-  fetch(DATA_URL + Date.now())
+  fetch(CDN + Date.now())
     .then(function(r){ return r.json(); })
     .then(function(d) {
-      var now = Date.now();
-      var updated = d.updated || 0;
-      var lagSec = Math.floor(now/1000 - updated);
-      document.getElementById('updated').textContent = 'data: ' + timeSince(updated);
-      document.getElementById('updated').style.color = lagSec < 60 ? '#00ff88' : lagSec < 120 ? '#ffaa00' : '#ff4444';
-
       var positions = d.positions || [];
       var trades = d.recentTrades || [];
       var stats = d.stats || {};
+      var updated = d.updated || 0;
+      var bought = stats.bought || 0;
 
+      document.getElementById('updated-ago').textContent = timeSince(updated);
       document.getElementById('pos-cnt').textContent = positions.length;
-      document.getElementById('bought').textContent = stats.bought || 0;
+      document.getElementById('bought').textContent = bought;
       document.getElementById('sold').textContent = stats.sold || 0;
-      document.getElementById('pos-time').textContent = new Date().toLocaleTimeString('de-CH');
+      document.getElementById('scanned').textContent = (stats.scanned || 0).toLocaleString();
+      document.getElementById('pos-refresh').textContent = new Date().toLocaleTimeString('de-CH');
 
-      // PnL from trades
-      var pnl = 0;
-      trades.forEach(function(t){ if (t.pnlSol) pnl += parseFloat(t.pnlSol); });
-      var pnlEl = document.getElementById('pnl');
-      pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(4);
-      pnlEl.className = 'stat-val ' + (pnl > 0 ? 'g' : pnl < 0 ? 'r' : 'gy');
+      // Detect new buy
+      positions.forEach(function(p) {
+        if (!prevPos[p.mint] && p.buyTime && (Date.now() - p.buyTime) < 60000) {
+          toast('🟢 BOUGHT $' + p.symbol + ' — $' + Math.round(p.buyMcapUsd) + ' mcap');
+          prevPos[p.mint] = true;
+        }
+      });
+      if (bought > prevBought && prevBought > 0) toast('⚡ New buy executed!');
+      prevBought = bought;
 
-      // Positions
+      // PnL calc
+      var pnl = 0, wins = 0, losses = 0;
+      trades.forEach(function(t){
+        if (t.pnlSol) { pnl += parseFloat(t.pnlSol); if (t.pnlSol > 0) wins++; else losses++; }
+      });
+      var pnlEl = document.getElementById('pnl-total');
+      pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(4) + ' SOL';
+      pnlEl.style.color = pnl > 0 ? '#00ff88' : pnl < 0 ? '#ff4444' : '#444';
+      var total = wins + losses;
+      document.getElementById('win-rate').textContent = total > 0 ? Math.round(wins/total*100) + '% win rate (' + wins + '/' + total + ')' : '— win rate';
+
+      setMood(positions, pnl);
+
+      // Render positions
       var posEl = document.getElementById('pos-list');
       if (!positions.length) {
-        posEl.innerHTML = '<div class="gy" style="font-size:0.72em;padding:8px 0">No open positions</div>';
+        posEl.innerHTML = '<div class="gy" style="font-size:0.7em;padding:10px 0;text-align:center">No open positions — scanning market...</div>';
       } else {
         var h = '';
-        var nowSec = now / 1000;
+        var now = Date.now();
         positions.forEach(function(p) {
           var held = p.buyTime ? Math.floor((now - p.buyTime) / 60000) : 0;
           var pnlPct = p.pnlPct || 0;
-          var pc = pnlPct > 5 ? 'g' : pnlPct < -15 ? 'r' : 'y';
+          var isLosing = pnlPct < -10;
+          var pc = pnlPct > 5 ? 'g' : pnlPct < -10 ? 'r' : 'y';
           var tpPct = p.tpMcapUsd && p.buyMcapUsd ? Math.round((p.tpMcapUsd/p.buyMcapUsd - 1)*100) : 0;
-          h += '<div class="pos">';
-          h += '<span class="sym">$' + (p.symbol || '?') + '</span>';
-          h += ' <span class="gy" style="font-size:0.7em">' + (p.name || '').slice(0,18) + '</span>';
-          h += '<div class="tags">';
-          h += '<span class="tag ' + pc + '">' + (pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%</span>';
-          h += '<span class="tag">In: ' + fmtUSD(p.buyMcapUsd) + '</span>';
-          if (p.tpMcapUsd) h += '<span class="tag y">TP: ' + fmtUSD(p.tpMcapUsd) + ' (+' + tpPct + '%)</span>';
+          var prog = tpPct > 0 ? Math.min(100, Math.max(0, (pnlPct / tpPct) * 100)) : 0;
+          var progColor = pnlPct > 0 ? '#00ff88' : '#ff4444';
+          h += '<div class="pos-card' + (isLosing ? ' losing' : '') + '" onclick="expandPos(this)">';
+          h += '<div style="display:flex;justify-content:space-between;align-items:center">';
+          h += '<div><span class="pos-sym">$' + (p.symbol || '?') + '</span><span class="pos-name">' + (p.name || '').slice(0,16) + '</span></div>';
+          h += '<div class="' + pc + '" style="font-size:1.2em;font-weight:bold">' + (pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%</div>';
+          h += '</div>';
+          h += '<div class="tags" style="margin-top:6px">';
+          h += '<span class="tag">in: ' + fmtUSD(p.buyMcapUsd) + '</span>';
+          h += '<span class="tag y">tp: ' + fmtUSD(p.tpMcapUsd) + '</span>';
           h += '<span class="tag b">' + (p.buySol || '?') + ' SOL</span>';
           h += '<span class="tag gy">' + held + 'min</span>';
+          if (p.strategy === 'B') h += '<span class="tag mb">GRAD</span>';
           h += '</div>';
-          // Progress bar to TP
-          if (p.tpMcapUsd && p.buyMcapUsd) {
-            var prog = Math.min(100, Math.max(0, ((p.pnlPct || 0) / tpPct) * 100));
-            h += '<div class="age-bar"><div class="age-fill" style="width:' + prog + '%"></div></div>';
-          }
+          h += '<div class="progress"><div class="progress-fill" style="width:' + prog + '%;background:' + progColor + '"></div></div>';
           h += '</div>';
         });
         posEl.innerHTML = h;
       }
 
-      // Trades
+      // Render trades
       var trEl = document.getElementById('trade-list');
       document.getElementById('trade-cnt').textContent = trades.length + ' total';
       if (!trades.length) {
-        trEl.innerHTML = '<div class="gy" style="font-size:0.72em;padding:4px 0">No trades yet</div>';
+        trEl.innerHTML = '<div class="gy" style="font-size:0.7em;padding:6px 0">No trades yet</div>';
       } else {
         var h2 = '';
         trades.slice(0,8).forEach(function(t) {
           var isBuy = (t.type || '').toLowerCase() === 'buy';
           var pnlSol = t.pnlSol ? parseFloat(t.pnlSol) : null;
           var hasMoonbag = t.reason && t.reason.indexOf('TP') >= 0;
-          h2 += '<div class="pos">';
-          h2 += '<span class="' + (isBuy ? 'g' : 'r') + '">' + (isBuy ? '▲ BUY' : '▼ SELL') + '</span>';
-          h2 += ' <span class="sym">$' + (t.symbol || '?') + '</span>';
-          h2 += '<div class="tags">';
-          if (t.buySol) h2 += '<span class="tag">' + t.buySol + ' SOL</span>';
-          if (pnlSol !== null && !isBuy) {
-            h2 += '<span class="tag ' + (pnlSol >= 0 ? 'g' : 'r') + '">' + (pnlSol >= 0 ? '+' : '') + pnlSol.toFixed(4) + ' SOL</span>';
-          }
-          if (t.reason) h2 += '<span class="tag ' + (hasMoonbag ? 'mb' : 'y') + '">' + t.reason.slice(0,18) + (hasMoonbag ? ' 🌙' : '') + '</span>';
+          var pnlColor = pnlSol > 0 ? '#00ff88' : pnlSol < 0 ? '#ff4444' : '#444';
+          h2 += '<div class="trade-item" onclick="copyMint(\'' + t.mint + '\')">';
+          h2 += '<div class="trade-icon">' + (isBuy ? '▲' : (hasMoonbag ? '🌙' : '▼')) + '</div>';
+          h2 += '<div class="trade-info">';
+          h2 += '<div class="trade-sym ' + (isBuy ? 'g' : 'r') + '">$' + (t.symbol || '?') + '</div>';
+          h2 += '<div class="trade-meta">' + (t.reason || '').slice(0,22) + (hasMoonbag ? ' 🌙' : '') + '</div>';
+          h2 += '</div>';
+          h2 += '<div class="trade-pnl">';
+          if (pnlSol !== null && !isBuy) h2 += '<div style="color:' + pnlColor + '">' + (pnlSol >= 0 ? '+' : '') + pnlSol.toFixed(4) + ' SOL</div>';
+          if (t.buySol) h2 += '<div style="color:#222;font-size:0.85em">' + t.buySol + ' SOL</div>';
           h2 += '</div></div>';
         });
         trEl.innerHTML = h2;
       }
-    })
-    .catch(function(e) {
-      document.getElementById('updated').textContent = 'error: ' + e.message.slice(0,30);
+    }).catch(function(e){
+      document.getElementById('updated-ago').textContent = 'error';
     });
 }
 
-// SOL balance via Helius
+function expandPos(el) {
+  el.style.maxHeight = el.style.maxHeight ? '' : '200px';
+  toast('Tap pump.fun link to view token chart');
+}
+
+function copyMint(mint) {
+  if (!mint) return;
+  if (navigator.clipboard) navigator.clipboard.writeText(mint);
+  toast('📋 Mint copied: ' + mint.slice(0,12) + '...');
+}
+
+// SOL balance
 function loadSOL() {
-  fetch(HELIUS, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:['4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf']})
-  }).then(function(r){ return r.json(); })
-    .then(function(d) {
-      var sol = (d.result && d.result.value ? d.result.value : 0) / 1e9;
-      var el = document.getElementById('sol');
-      el.textContent = sol.toFixed(4) + ' SOL';
-      el.className = 'hero-sol ' + (sol > 0.5 ? 'g' : sol > 0.1 ? 'y' : 'r');
-    }).catch(function(){});
+  fetch(HELIUS, {method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:['4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf']})
+  }).then(function(r){return r.json();}).then(function(d){
+    var sol = ((d.result||{}).value||0)/1e9;
+    var el = document.getElementById('sol');
+    el.textContent = sol.toFixed(4) + ' SOL';
+    el.style.color = sol > 0.5 ? '#00ff88' : sol > 0.1 ? '#ffaa00' : '#ff4444';
+  }).catch(function(){});
 }
 
 // Init
-loadData();
-loadSOL();
+loadData(); loadSOL();
 setInterval(function(){ document.getElementById('ts').textContent = new Date().toLocaleTimeString('de-CH'); }, 1000);
-setInterval(loadData, 30000);   // every 30s (matches push interval)
-setInterval(loadSOL, 15000);    // every 15s
+setInterval(loadData, 30000);
+setInterval(loadSOL, 15000);
+setInterval(function(){ setMood([], 0); }, 8000);
 </script>
 </body>
 </html>
