@@ -3,28 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>👑 Molduk</title>
+<title>👑 Molduk Mission Control</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#080808;color:#e0e0e0;font-family:'Courier New',monospace;padding:10px;max-width:620px;margin:0 auto}
 h1{color:#ff3333;font-size:1.4em;letter-spacing:4px;margin-bottom:2px}
 .live{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:0.65em;color:#333}
 .dot{width:7px;height:7px;background:#00ff88;border-radius:50%;animation:p 1.5s infinite}
-@keyframes p{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,0.5)}50%{box-shadow:0 0 0 4px rgba(0,255,136,0)}}
+@keyframes p{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,0.4)}50%{box-shadow:0 0 0 5px rgba(0,255,136,0)}}
 .hero{background:linear-gradient(135deg,#0a1a0a,#111);border:1px solid #1a3a1a;border-radius:10px;padding:14px;margin-bottom:8px;text-align:center}
 .hero-sol{font-size:2.8em;font-weight:bold;color:#00ff88;letter-spacing:2px}
 .hero-sub{font-size:0.65em;color:#444;margin-top:2px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:8px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
 .stat{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:8px;text-align:center}
 .stat-lbl{font-size:0.52em;color:#333;text-transform:uppercase;letter-spacing:2px;margin-bottom:3px}
 .stat-val{font-size:1.1em;font-weight:bold}
 .g{color:#00ff88}.r{color:#ff4444}.y{color:#ffaa00}.b{color:#4488ff}.gy{color:#444}
 .sec{background:#0e0e0e;border:1px solid #161616;border-radius:8px;padding:10px;margin-bottom:8px}
-.sec-h{font-size:0.55em;color:#2a2a2a;text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;padding-bottom:5px;border-bottom:1px solid #141414}
+.sec-h{font-size:0.55em;color:#2a2a2a;text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;display:flex;justify-content:space-between;padding-bottom:5px;border-bottom:1px solid #141414}
 .pos{padding:7px 0;border-bottom:1px solid #111;font-size:0.7em}
 .pos:last-child{border:none}
-.sym{font-weight:bold;font-size:1.1em}
+.sym{font-weight:bold;font-size:1.05em}
 .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
 .tag{padding:1px 6px;border-radius:3px;font-size:0.65em;background:#161616}
 .tag.g{color:#00ff88;background:#0a150a}
@@ -32,240 +31,184 @@ h1{color:#ff3333;font-size:1.4em;letter-spacing:4px;margin-bottom:2px}
 .tag.y{color:#ffaa00;background:#15130a}
 .tag.b{color:#4488ff;background:#0a0f15}
 .tag.mb{color:#aa88ff;background:#110a15}
-.pnl-big{font-size:1.4em;font-weight:bold}
-.log{font-size:0.58em;color:#2a2a2a;max-height:120px;overflow-y:auto;font-family:monospace}
-.log-l{padding:1px 0;border-bottom:1px solid #0c0c0c}
-.log-l.buy{color:#00cc66}.log-l.sell{color:#cc4444}.log-l.info{color:#3366aa}
-.addr{font-size:0.52em;color:#222;word-break:break-all;margin-top:1px}
-.wallet-box{background:#0a0a0a;border:1px solid #141414;border-radius:6px;padding:8px;font-size:0.62em}
-.wallet-box td{padding:3px 6px;border-bottom:1px solid #111}
-.wallet-box td:first-child{color:#333;width:35%}
-.flash{animation:fl 0.6s}
-@keyframes fl{0%{background:#0a2a0a}100%{background:transparent}}
-#pnl-total{transition:color 0.3s}
+.wallet-table{width:100%;border-collapse:collapse;font-size:0.62em}
+.wallet-table td{padding:4px 6px;border-bottom:1px solid #111}
+.wallet-table td:first-child{color:#333;width:35%}
+.addr{font-size:0.85em;color:#222;word-break:break-all}
+.age-bar{height:3px;background:#1a1a1a;border-radius:2px;margin-top:4px;overflow:hidden}
+.age-fill{height:100%;background:#00ff88;border-radius:2px;transition:width 0.5s}
 </style>
 </head>
 <body>
-
 <h1>👑 MOLDUK</h1>
-<div class="live"><span class="dot"></span><span id="ts">–</span><span style="margin-left:auto" id="status-text">connecting...</span></div>
+<div class="live">
+  <span class="dot"></span>
+  <span id="ts">–</span>
+  <span style="margin-left:auto;font-size:0.9em" id="updated">–</span>
+</div>
 
-<!-- SOL Hero Card -->
 <div class="hero">
   <div class="hero-sub">SOL BALANCE</div>
-  <div class="hero-sol" id="sol">–</div>
-  <div class="hero-sub" style="margin-top:4px"><span id="usdc" class="y">–</span> USDC.e &nbsp;·&nbsp; Wallet: 4imFZ38D...grWf</div>
+  <div class="hero-sol" id="sol">loading…</div>
+  <div class="hero-sub" style="margin-top:4px">
+    <span id="usdc" class="y">–</span> USDC.e &nbsp;·&nbsp;
+    <span class="gy">4imFZ38D…grWf</span>
+  </div>
 </div>
 
-<!-- Stats row -->
 <div class="g4">
-  <div class="stat"><div class="stat-lbl">Positions</div><div class="stat-val b" id="pos-count">0</div></div>
-  <div class="stat"><div class="stat-lbl">Bought</div><div class="stat-val y" id="bought">0</div></div>
-  <div class="stat"><div class="stat-lbl">Sold</div><div class="stat-val" id="sold">0</div></div>
-  <div class="stat"><div class="stat-lbl">Total PnL</div><div class="stat-val" id="pnl-total">–</div></div>
-</div>
-<div class="g2">
-  <div class="stat"><div class="stat-lbl">Scanned</div><div class="stat-val gy" id="scanned">–</div></div>
-  <div class="stat"><div class="stat-lbl">Deepnets</div><div class="stat-val b" id="dn-count">✓</div></div>
+  <div class="stat"><div class="stat-lbl">Positions</div><div class="stat-val b" id="pos-cnt">–</div></div>
+  <div class="stat"><div class="stat-lbl">Bought</div><div class="stat-val y" id="bought">–</div></div>
+  <div class="stat"><div class="stat-lbl">Sold</div><div class="stat-val" id="sold">–</div></div>
+  <div class="stat"><div class="stat-lbl">PnL</div><div class="stat-val" id="pnl">–</div></div>
 </div>
 
-<!-- Open Positions -->
 <div class="sec">
-  <div class="sec-h"><span>🎯 Open Positions</span><span class="gy" id="pos-update">–</span></div>
-  <div id="pos-list"><div class="gy" style="font-size:0.7em;padding:8px 0">No positions — scanning for opportunities...</div></div>
+  <div class="sec-h"><span>🎯 Open Positions</span><span class="gy" id="pos-time">–</span></div>
+  <div id="pos-list"><div class="gy" style="font-size:0.72em;padding:8px 0">Loading…</div></div>
 </div>
 
-<!-- Recent Trades -->
 <div class="sec">
-  <div class="sec-h"><span>📊 Recent Trades</span><span class="gy" id="trade-count">–</span></div>
-  <div id="trade-list"><div class="gy" style="font-size:0.7em;padding:4px 0">No trades yet</div></div>
+  <div class="sec-h"><span>📊 Recent Trades</span><span class="gy" id="trade-cnt">–</span></div>
+  <div id="trade-list"><div class="gy" style="font-size:0.72em;padding:4px 0">Loading…</div></div>
 </div>
 
-<!-- Wallets -->
 <div class="sec">
   <div class="sec-h"><span>📍 Wallets</span></div>
-  <table class="wallet-box" style="width:100%">
+  <table class="wallet-table">
     <tr><td>SOL Sniper</td><td><div class="addr">4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf</div></td></tr>
     <tr><td>Polymarket</td><td><div class="addr">0xD1ed2D6f87f03Aa1770cC4A96b8990909602A6da</div></td></tr>
   </table>
 </div>
 
-<!-- Live Log -->
-<div class="sec">
-  <div class="sec-h"><span>📡 Live Log</span><span class="gy" id="log-cnt">0</span></div>
-  <div class="log" id="live-log"></div>
-</div>
-
 <script>
-var VPS = 'http://161.35.10.127';
-var logCnt = 0;
-var prevMints = new Set();
-var prevBought = 0;
-var totalPnl = 0;
-
-function log(msg, type) {
-  logCnt++;
-  document.getElementById('log-cnt').textContent = logCnt;
-  var el = document.getElementById('live-log');
-  var line = document.createElement('div');
-  line.className = 'log-l ' + (type || '');
-  line.textContent = new Date().toLocaleTimeString('de-CH') + ' ' + msg;
-  el.insertBefore(line, el.firstChild);
-  while (el.children.length > 60) el.removeChild(el.lastChild);
-}
+var DATA_URL = 'https://raw.githubusercontent.com/II187/molduk-dashboard/main/data.json?t=';
+var HELIUS = 'https://mainnet.helius-rpc.com/?api-key=ead947f5-2ac4-4f2c-a286-ad48e188b2ad';
 
 function fmtUSD(n) {
+  if (!n) return '$0';
   if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
   if (n >= 1000) return '$' + (n/1000).toFixed(1) + 'k';
-  return '$' + n.toFixed(0);
+  return '$' + Math.round(n);
 }
 
-function get(url, cb) {
-  var x = new XMLHttpRequest();
-  x.open('GET', url); x.timeout = 6000;
-  x.onload = function(){ try{ cb(JSON.parse(x.responseText)); }catch(e){ cb(null); } };
-  x.onerror = cb.bind(null, null);
-  x.ontimeout = cb.bind(null, null);
-  x.send();
+function timeSince(ts) {
+  var s = Math.floor((Date.now()/1000) - ts);
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  return Math.floor(s/3600) + 'h ago';
 }
 
-// SOL balance
+// Load from GitHub raw (HTTPS, no CORS issue)
+function loadData() {
+  fetch(DATA_URL + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(d) {
+      var now = Date.now();
+      var updated = d.updated || 0;
+      var lagSec = Math.floor(now/1000 - updated);
+      document.getElementById('updated').textContent = 'data: ' + timeSince(updated);
+      document.getElementById('updated').style.color = lagSec < 60 ? '#00ff88' : lagSec < 120 ? '#ffaa00' : '#ff4444';
+
+      var positions = d.positions || [];
+      var trades = d.recentTrades || [];
+      var stats = d.stats || {};
+
+      document.getElementById('pos-cnt').textContent = positions.length;
+      document.getElementById('bought').textContent = stats.bought || 0;
+      document.getElementById('sold').textContent = stats.sold || 0;
+      document.getElementById('pos-time').textContent = new Date().toLocaleTimeString('de-CH');
+
+      // PnL from trades
+      var pnl = 0;
+      trades.forEach(function(t){ if (t.pnlSol) pnl += parseFloat(t.pnlSol); });
+      var pnlEl = document.getElementById('pnl');
+      pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(4);
+      pnlEl.className = 'stat-val ' + (pnl > 0 ? 'g' : pnl < 0 ? 'r' : 'gy');
+
+      // Positions
+      var posEl = document.getElementById('pos-list');
+      if (!positions.length) {
+        posEl.innerHTML = '<div class="gy" style="font-size:0.72em;padding:8px 0">No open positions</div>';
+      } else {
+        var h = '';
+        var nowSec = now / 1000;
+        positions.forEach(function(p) {
+          var held = p.buyTime ? Math.floor((now - p.buyTime) / 60000) : 0;
+          var pnlPct = p.pnlPct || 0;
+          var pc = pnlPct > 5 ? 'g' : pnlPct < -15 ? 'r' : 'y';
+          var tpPct = p.tpMcapUsd && p.buyMcapUsd ? Math.round((p.tpMcapUsd/p.buyMcapUsd - 1)*100) : 0;
+          h += '<div class="pos">';
+          h += '<span class="sym">$' + (p.symbol || '?') + '</span>';
+          h += ' <span class="gy" style="font-size:0.7em">' + (p.name || '').slice(0,18) + '</span>';
+          h += '<div class="tags">';
+          h += '<span class="tag ' + pc + '">' + (pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%</span>';
+          h += '<span class="tag">In: ' + fmtUSD(p.buyMcapUsd) + '</span>';
+          if (p.tpMcapUsd) h += '<span class="tag y">TP: ' + fmtUSD(p.tpMcapUsd) + ' (+' + tpPct + '%)</span>';
+          h += '<span class="tag b">' + (p.buySol || '?') + ' SOL</span>';
+          h += '<span class="tag gy">' + held + 'min</span>';
+          h += '</div>';
+          // Progress bar to TP
+          if (p.tpMcapUsd && p.buyMcapUsd) {
+            var prog = Math.min(100, Math.max(0, ((p.pnlPct || 0) / tpPct) * 100));
+            h += '<div class="age-bar"><div class="age-fill" style="width:' + prog + '%"></div></div>';
+          }
+          h += '</div>';
+        });
+        posEl.innerHTML = h;
+      }
+
+      // Trades
+      var trEl = document.getElementById('trade-list');
+      document.getElementById('trade-cnt').textContent = trades.length + ' total';
+      if (!trades.length) {
+        trEl.innerHTML = '<div class="gy" style="font-size:0.72em;padding:4px 0">No trades yet</div>';
+      } else {
+        var h2 = '';
+        trades.slice(0,8).forEach(function(t) {
+          var isBuy = (t.type || '').toLowerCase() === 'buy';
+          var pnlSol = t.pnlSol ? parseFloat(t.pnlSol) : null;
+          var hasMoonbag = t.reason && t.reason.indexOf('TP') >= 0;
+          h2 += '<div class="pos">';
+          h2 += '<span class="' + (isBuy ? 'g' : 'r') + '">' + (isBuy ? '▲ BUY' : '▼ SELL') + '</span>';
+          h2 += ' <span class="sym">$' + (t.symbol || '?') + '</span>';
+          h2 += '<div class="tags">';
+          if (t.buySol) h2 += '<span class="tag">' + t.buySol + ' SOL</span>';
+          if (pnlSol !== null && !isBuy) {
+            h2 += '<span class="tag ' + (pnlSol >= 0 ? 'g' : 'r') + '">' + (pnlSol >= 0 ? '+' : '') + pnlSol.toFixed(4) + ' SOL</span>';
+          }
+          if (t.reason) h2 += '<span class="tag ' + (hasMoonbag ? 'mb' : 'y') + '">' + t.reason.slice(0,18) + (hasMoonbag ? ' 🌙' : '') + '</span>';
+          h2 += '</div></div>';
+        });
+        trEl.innerHTML = h2;
+      }
+    })
+    .catch(function(e) {
+      document.getElementById('updated').textContent = 'error: ' + e.message.slice(0,30);
+    });
+}
+
+// SOL balance via Helius
 function loadSOL() {
-  var x = new XMLHttpRequest();
-  x.open('POST', 'https://mainnet.helius-rpc.com/?api-key=ead947f5-2ac4-4f2c-a286-ad48e188b2ad');
-  x.setRequestHeader('Content-Type', 'application/json');
-  x.timeout = 6000;
-  x.onload = function() {
-    try {
-      var d = JSON.parse(x.responseText);
+  fetch(HELIUS, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:['4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf']})
+  }).then(function(r){ return r.json(); })
+    .then(function(d) {
       var sol = (d.result && d.result.value ? d.result.value : 0) / 1e9;
       var el = document.getElementById('sol');
       el.textContent = sol.toFixed(4) + ' SOL';
       el.className = 'hero-sol ' + (sol > 0.5 ? 'g' : sol > 0.1 ? 'y' : 'r');
-    } catch(e){}
-  };
-  x.onerror = function(){};
-  x.send(JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:['4imFZ38DmwD11ohSTEnHHP34Sr6bojMMe21rqhqmgrWf']}));
-}
-
-// Bot data
-function loadBot() {
-  get(VPS + ':3000/api/pumpfun', function(d) {
-    if (!d) { document.getElementById('status-text').textContent = 'offline'; return; }
-    document.getElementById('status-text').textContent = 'live';
-    
-    var positions = d.positions || [];
-    var trades = d.recentTrades || [];
-    var bought = d.bought || 0;
-    var sold = d.sold || 0;
-
-    document.getElementById('pos-count').textContent = positions.length;
-    document.getElementById('bought').textContent = bought;
-    document.getElementById('sold').textContent = sold;
-    document.getElementById('pos-update').textContent = new Date().toLocaleTimeString('de-CH');
-
-    // Detect new buys
-    positions.forEach(function(p) {
-      if (!prevMints.has(p.mint)) {
-        prevMints.add(p.mint);
-        if (p.buyTime && (Date.now() - p.buyTime) < 60000) {
-          log('🟢 BOUGHT $' + p.symbol + ' entry=$' + Math.round(p.buyMcapUsd) + ' ' + p.buySol + 'SOL', 'buy');
-          document.getElementById('pos-list').classList.add('flash');
-          setTimeout(function(){ document.getElementById('pos-list').classList.remove('flash'); }, 700);
-        }
-      }
-    });
-    // Remove sold positions from tracking
-    var curMints = new Set(positions.map(function(p){ return p.mint; }));
-    prevMints.forEach(function(m){ if (!curMints.has(m)) prevMints.delete(m); });
-
-    // Calc total PnL from trades
-    var pnl = 0;
-    trades.forEach(function(t){ if (t.pnlSol) pnl += parseFloat(t.pnlSol); });
-    totalPnl = pnl;
-    var pnlEl = document.getElementById('pnl-total');
-    pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(4) + ' SOL';
-    pnlEl.className = 'stat-val ' + (pnl > 0 ? 'g' : pnl < 0 ? 'r' : 'gy');
-
-    // Positions
-    var posEl = document.getElementById('pos-list');
-    if (!positions.length) {
-      posEl.innerHTML = '<div class="gy" style="font-size:0.7em;padding:8px 0">No positions — scanning...</div>';
-    } else {
-      var h = '';
-      var now = Date.now();
-      positions.forEach(function(p) {
-        var held = p.buyTime ? Math.floor((now - p.buyTime) / 60000) : 0;
-        var pnlPct = p.pnlPct || 0;
-        var pnlClass = pnlPct > 5 ? 'g' : pnlPct < -10 ? 'r' : 'y';
-        h += '<div class="pos">';
-        h += '<span class="sym">$' + (p.symbol || '?') + '</span>';
-        h += ' <span class="gy" style="font-size:0.75em">' + (p.name || '').slice(0,20) + '</span><br>';
-        h += '<div class="tags">';
-        h += '<span class="tag ' + pnlClass + '">' + (pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%</span>';
-        h += '<span class="tag">In: ' + fmtUSD(p.buyMcapUsd) + '</span>';
-        if (p.tpMcapUsd) h += '<span class="tag y">TP: ' + fmtUSD(p.tpMcapUsd) + '</span>';
-        h += '<span class="tag b">' + (p.buySol || '?') + ' SOL</span>';
-        h += '<span class="tag gy">' + held + 'min</span>';
-        h += '<span class="tag ' + (p.strategy === 'B' ? 'b' : 'gy') + '">' + (p.strategy === 'B' ? 'GRAD' : 'SNIPE') + '</span>';
-        h += '</div></div>';
-      });
-      posEl.innerHTML = h;
-    }
-
-    // Trades
-    var trEl = document.getElementById('trade-list');
-    document.getElementById('trade-count').textContent = trades.length + ' trades';
-    if (!trades.length) {
-      trEl.innerHTML = '<div class="gy" style="font-size:0.7em;padding:4px 0">No trades yet</div>';
-    } else {
-      var h2 = '';
-      trades.slice(0,8).forEach(function(t) {
-        var isBuy = (t.type||'').toLowerCase() === 'buy';
-        var pnlSol = t.pnlSol ? parseFloat(t.pnlSol) : null;
-        h2 += '<div class="pos">';
-        h2 += '<span class="' + (isBuy ? 'g' : 'r') + '">' + (isBuy ? '▲' : '▼') + '</span>';
-        h2 += ' <span class="sym">$' + (t.symbol || '?') + '</span>';
-        h2 += '<div class="tags">';
-        if (t.buySol) h2 += '<span class="tag">' + t.buySol + ' SOL</span>';
-        if (pnlSol !== null) {
-          h2 += '<span class="tag ' + (pnlSol >= 0 ? 'g' : 'r') + '">' + (pnlSol >= 0 ? '+' : '') + pnlSol.toFixed(4) + ' SOL</span>';
-        }
-        if (t.reason) {
-          var hasMoonbag = t.reason.indexOf('TP') >= 0;
-          h2 += '<span class="tag ' + (hasMoonbag ? 'mb' : 'y') + '">' + t.reason.slice(0,20) + (hasMoonbag ? ' 🌙' : '') + '</span>';
-        }
-        h2 += '</div></div>';
-      });
-      trEl.innerHTML = h2;
-    }
-  });
-}
-
-// Scanner stats
-function loadStats() {
-  get(VPS + ':3000/api/status', function(d) {
-    if (d && d.scanned) document.getElementById('scanned').textContent = d.scanned.toLocaleString();
-  });
-}
-
-// USDC
-function loadUSDC() {
-  get(VPS + ':3003/usdc-balance', function(d) {
-    document.getElementById('usdc').textContent = (d && d.usdc) ? '$' + d.usdc.toFixed(2) : '$0';
-  });
+    }).catch(function(){});
 }
 
 // Init
-loadSOL(); loadBot(); loadStats(); loadUSDC();
-log('Dashboard connected', 'info');
-
-// Timers
+loadData();
+loadSOL();
 setInterval(function(){ document.getElementById('ts').textContent = new Date().toLocaleTimeString('de-CH'); }, 1000);
-setInterval(loadBot, 3000);
-setInterval(loadSOL, 8000);
-setInterval(loadStats, 5000);
-setInterval(loadUSDC, 30000);
+setInterval(loadData, 30000);   // every 30s (matches push interval)
+setInterval(loadSOL, 15000);    // every 15s
 </script>
 </body>
 </html>
